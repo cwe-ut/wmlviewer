@@ -22,7 +22,8 @@ The following are a few of the high priority improvements suggested for this lib
 2. Ability to adjust server calls to a specified date range
 3. Expand library of observed properties and units
 4. As variations in WaterML services are identified, expand parsing functions accordingly
-5. Creation of API documentation
+5. Identify additional desired features
+6. Creation of API documentation
 
 
 Demo
