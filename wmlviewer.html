@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WaterML Viewer</title>
+
+<!--General Style Sheets-->
+	<link rel="stylesheet" type="text/css" href="wml.css">
+
+<!--Mapping Scripts-->	
+	<link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
+  	<script>var dojoConfig = { parseOnLoad:true };</script>
+	<script src="http://js.arcgis.com/3.8compact/"></script>
+    <script src="wml-map.js"></script>
+
+<!--Charting scripts-->
+	<script type="text/javascript" src="highcharts/jquery.1.9.1.min.js"></script>
+	<script src="highcharts/highcharts.js"></script>
+	<script src="highcharts/modules/exporting.js"></script>
+	<script src="highcharts/modules/export-csv.js"></script>   
+    <script src="wml-chart.js"></script> 
+   	<script src="wml-property-library.js"></script>
+   	<script src="wml-chart-templates.js"></script>    
+    
+</head>
+
+<body>
+	<div id="map" class="mapDiv"></div>
+    <br/>
+	<div id="chart" class="chartDiv"></div>
+    <br/>
+	<div id="table" class="tableDiv"></div>
+    <br/>
+
+
+
+<script>
+	var mainMap = new WMLMap();
+	mainMap.chartVariableName = "mainChart"; //This links the map to the chart and should match the chart variable defined below
+	mainMap.mapDiv = "map";
+	mainMap.init();
+	
+	var defaultService = "http://crwr-arcgis10.austin.utexas.edu/ArcGIS/rest/services/WorldWaterOnline/WatershedExplorer_Discharge/MapServer";
+	
+	//Allow user to specify a Feature Service as a URL parameter
+	var featureService = GetSingleURLParameter();
+	if (featureService == -1){
+		featureService = defaultService;
+	}
+	try {
+		mainMap.AddFeatureService(featureService);
+	} catch(err){
+		console.log("Invalid feature service provided in URL")
+	}
+	
+	var mainChart = new WMLChart();
+	mainChart.title = "WWO Stream Gages";
+	mainChart.chartDiv = "chart";
+	mainChart.tableDiv = "table";
+	mainChart.init();	
+	
+function GetSingleURLParameter(){
+	//This accepts a single Feature Service (which can be URL encoded or not) as an unnammed url parameter following the first "?" found in the url.
+	//Allowing multiple parameters (would require a different approach.
+	var url = document.URL;
+	if ((url.indexOf("?")>0) && (url.length > url.indexOf("?")+1)) {
+		var parameter = url.substring(url.indexOf("?")+1);	
+		if (parameter.substr(parameter.length -1) == "#"){
+			parameter = parameter.slice(0,-1);
+		}
+		return parameter;
+	} else {
+		return -1;
+	}
+}	
+</script>
+
+</body>
+
+</html>
