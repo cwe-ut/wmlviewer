@@ -1,13 +1,5 @@
 /* CSS Document */
 
-
-.mapDiv, .chartDiv, .tableDiv{
-	margin-left:auto;
-	margin-right:auto;
-	width: 800px;
-	max-width:90%;
-	
-}
 .mapDiv, .chartDiv {
 	border-style:solid;
 	border-color:#CCCCCC;
