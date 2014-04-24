@@ -53,7 +53,7 @@ var wwoTemplate = {
 				},
 				align: 'right',
 				x: -30,
-				symbol: 'url(images/subtract-icon.png)',
+				symbol: 'url(' + wmlviewerPath + 'images/subtract-icon.png)',
 				_titleKey: 'removeHidden_key',
 			},
 			removeAllSeries: {
@@ -62,7 +62,7 @@ var wwoTemplate = {
 				},
 				align: 'right',
 				x: 0,
-				symbol: 'url(images/close-icon.png)',
+				symbol: 'url(' + wmlviewerPath + 'images/close-icon.png)',
 				_titleKey: 'removeAll_key',
 			},			
 			downloadCSV: {
@@ -74,7 +74,7 @@ var wwoTemplate = {
 				align: 'right',
 				x: -60,
 				//symbol: 'triangle-down',
-				symbol: 'url(images/download-icon.png)',
+				symbol: 'url(' + wmlviewerPath + 'images/download-icon.png)',
 				_titleKey: 'download_key',
 			}			
 		}
