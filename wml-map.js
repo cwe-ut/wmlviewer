@@ -145,7 +145,7 @@ function showFeatureSet(fset,evt) {
 	
 	for (var i=0; i<numFeatures; i++) {
 	  var graphic = featureSet.features[i];
-	  content = content + graphic.attributes.SiteName + " Field (<A href='#' onclick='showFeature(featureSet.features[" + i + "]);'>show</A>)<br/>";
+	  content = content + graphic.attributes.SiteName + " Field (<span class='showFeatureButton' onclick='showFeature(featureSet.features[" + i + "]);'>show</span>)<br/>";
 	}
 	curMap.map.infoWindow.setTitle(title);
 	curMap.map.infoWindow.setContent(content);

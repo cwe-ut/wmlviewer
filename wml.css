@@ -21,6 +21,12 @@ input.wide{
 	border-width:1
 }
 
+span.showFeatureButton {
+    text-decoration:underline;
+    color: #336699;
+    cursor:pointer;
+}
+
 /* 
 Generic Styling, for Desktops/Laptops 
 */
