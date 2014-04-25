@@ -13,7 +13,7 @@ input.wide{
 	border-width:1
 }
 
-span.esriPopupLink {
+span.wmlPopupLink {
     text-decoration:underline;
     color: #336699;
     cursor:pointer;

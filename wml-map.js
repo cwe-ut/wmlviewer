@@ -146,7 +146,7 @@ function showFeatureSet(fset,evt) {
 	for (var i=0; i<numFeatures; i++) {
         var graphic = featureSet.features[i];
         content = content + graphic.attributes.SiteName + 
-            " Field (<span class='esriPopupLink' onclick='showFeature(featureSet.features[" + 
+            " Field (<span class='wmlPopupLink' onclick='showFeature(featureSet.features[" + 
             i + "]);'>show</span>)<br/>";
 	}
 	curMap.map.infoWindow.setTitle(title);
