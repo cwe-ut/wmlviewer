@@ -18,9 +18,9 @@ function WMLMap() {
 	this.basemaps = ["http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer", "http://hydrology.esri.com:6080/arcgis/rest/services/WorldHydroReferenceOverlay/MapServer"];
 	this.featureServices = [];
 	
-	this.init = function() {
+	this.init = function(initialExtent) {
 		curMap = self;
-		CreateMap(self.mapDiv, self.basemaps, self.featureServices);
+		CreateMap(self.mapDiv, self.basemaps, self.featureServices, initialExtent);
 	}
 	this.AddFeatureService = function(featureService) {
 		curMap = self;
@@ -30,12 +30,29 @@ function WMLMap() {
 //*********END MAP WIDGET*********************
 
 //**********MAP METHODS***********************
-function CreateMap(div, basemapList, featureServiceList){
+function CreateMap(div, basemapList, featureServiceList, initialExtent){
 	require([
         "esri/map",
         "esri/layers/ArcGISTiledMapServiceLayer",
-    ], function (Map, ArcGISTiledMapServiceLayer) { 
-		curMap.map = new Map(div,{});
+         "esri/geometry/Extent"
+    ], function (Map, ArcGISTiledMapServiceLayer, Extent) { 
+        // Define the default extent for the map
+        var extent = new Extent({"spatialReference":{"wkid":4326}});
+        // If client didn't provide a default, then cover the width, but not necessarily the height, of the full extent
+        if (initialExtent === undefined || (
+            initialExtent.xmin === undefined && initialExtent.ymin === undefined &&
+            initialExtent.xmin === undefined && initialExtent.ymin === undefined)) {
+                extent.xmin = -180;
+                extent.xmax = 180;
+        }
+        else {
+            if ('xmin' in initialExtent) {extent.xmin = initialExtent.xmin;}
+            if ('ymin' in initialExtent) {extent.ymin = initialExtent.ymin;}
+            if ('xmax' in initialExtent) {extent.xmax = initialExtent.xmax;}
+            if ('ymax' in initialExtent) {extent.ymax = initialExtent.ymax;}
+        }
+
+		curMap.map = new Map(div,{extent: extent});
 		for (var i=0;i<basemapList.length;i++){
 			var basemap = new ArcGISTiledMapServiceLayer(basemapList[i]);
 			curMap.map.addLayer(basemap);
@@ -45,7 +62,7 @@ function CreateMap(div, basemapList, featureServiceList){
 		}		
 	})
 }
-
+   
 function AddFeatureService(featureService){
 	//Takes a URL to a non cached map service.
 	require([

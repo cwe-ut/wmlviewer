@@ -42,6 +42,8 @@
 	var mainMap = new WMLMap();
 	mainMap.chartVariableName = "mainChart"; //This links the map to the chart and should match the chart variable defined below
 	mainMap.mapDiv = "map";
+	//mainMap.init({xmin:-179,xmax:-100,ymin:53,ymax:72});
+	//mainMap.init({ymin:-50,ymax:72});
 	mainMap.init();
 	
 	var defaultService = "http://crwr-arcgis10.austin.utexas.edu/ArcGIS/rest/services/WorldWaterOnline/WatershedExplorer_Discharge/MapServer";
@@ -58,7 +60,7 @@
 	}
 	
 	var mainChart = new WMLChart();
-	mainChart.title = "WWO Stream Gages";
+	mainChart.title = "Streamflow";
 	mainChart.chartDiv = "chart";
 	mainChart.tableDiv = "table";
 	mainChart.init();	
