@@ -144,8 +144,10 @@ function showFeatureSet(fset,evt) {
 	var content = "Please select desired field from the list below.<br />";
 	
 	for (var i=0; i<numFeatures; i++) {
-	  var graphic = featureSet.features[i];
-	  content = content + graphic.attributes.SiteName + " Field (<span class='showFeatureButton' onclick='showFeature(featureSet.features[" + i + "]);'>show</span>)<br/>";
+        var graphic = featureSet.features[i];
+        content = content + graphic.attributes.SiteName + 
+            " Field (<span class='esriPopupLink' onclick='showFeature(featureSet.features[" + 
+            i + "]);'>show</span>)<br/>";
 	}
 	curMap.map.infoWindow.setTitle(title);
 	curMap.map.infoWindow.setContent(content);
