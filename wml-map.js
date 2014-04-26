@@ -78,7 +78,7 @@ function AddFeatureService(featureService){
 		var layer = featureService + "/0";
 		queryTask = new esri.tasks.QueryTask(layer);
 		query = new esri.tasks.Query();
-		query.outFields = ["SiteName", "WaterML", "DataProvider"];		
+		query.outFields = ["SiteName", "WaterML", "Source"];		
 	})	
 }
 //********END MAP METHODS********************
@@ -87,7 +87,6 @@ function AddFeatureService(featureService){
 function executeQueryTask(evt) {
 	var centerPoint = new esri.geometry.Point
 			(evt.mapPoint.x,evt.mapPoint.y,evt.mapPoint.spatialReference);
-
 	var querybox;
 	querybox = pointToExtent(curMap.map,centerPoint, 10);
 	query.geometry = querybox;
@@ -121,7 +120,6 @@ function pointToExtent(/*esri.Map*/ map, /*esri.geometry.Point (in map coords)*/
 //********DIALOGUE BOXES***************
 function showFeature(feature,evt) {
 	//When single feature is selected, provide user with metadata and option to add time series to chart
-	console.log("showFeatures");
 	//Note: this requires a separate js file defining AddWaterML
 	dojo.require("dijit/form/Button");
 	curMap.map.graphics.clear();
@@ -131,7 +129,7 @@ function showFeature(feature,evt) {
 	var content;
 	
 	var siteNameLabel = 'Site Name: ' + feature.attributes.SiteName + '</br>';
-	var dataProviderLabel = 'Data Provider: ' + feature.attributes.DataProvider + '</br>';
+	var dataProviderLabel = 'Data Provider: ' + feature.attributes.Source + '</br>';
 	var addToChartButtonLabel = '<button dojoType="dijit.form.Button" type="button" style="width:100%" onClick="javascript:' + curMap.chartVariableName + '.AddLink(' + "'" + feature.attributes.WaterML + "'" + ');CloseWindow();">Add to Chart</button></br>';
 	var dataSourceButtonLabel = '<a href="' + feature.attributes.WaterML + '" target="_blank"><button style="width:50%">Data Source</button></a>';
 	var closeButton = '<button dojoType="dijit.form.Button" type="button" style="width:50%" onClick="javascript:CloseWindow();">Close</button>'
@@ -149,7 +147,6 @@ function showFeature(feature,evt) {
 
 function showFeatureSet(fset,evt) {
 	//When user click returns multiple nearby features, resolve to a single feature via dialogue box
-	console.log("showFeatureSet");
 	var screenPoint = evt.screenPoint;
 	
 	featureSet = fset;
