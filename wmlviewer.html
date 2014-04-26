@@ -8,7 +8,7 @@
 <!--General Style Sheets-->
 	<link rel="stylesheet" href="wml.css">
     <style>
-        .mapDiv, .chartDiv, .tableDiv{width: 100%;}
+        .wmlMap, .wmlChart, .wmlTable{width: 100%;}
     </style>
     
 <!--Mapping Scripts-->	
@@ -31,17 +31,19 @@
 </head>
 
 <body>
-	<div id="map" class="mapDiv"></div>
+	<div id="map" class="wmlMap"></div>
     <br/>
-	<div id="chart" class="chartDiv"></div>
+	<div id="chart" class="wmlChart"></div>
     <br/>
-	<div id="table" class="tableDiv"></div>
+	<div id="table" class="wmlTable"></div>
     <br/>
 
 <script>
 	var mainMap = new WMLMap();
 	mainMap.chartVariableName = "mainChart"; //This links the map to the chart and should match the chart variable defined below
 	mainMap.mapDiv = "map";
+	//mainMap.init({xmin:-179,xmax:-100,ymin:53,ymax:72});
+	//mainMap.init({ymin:-50,ymax:72});
 	mainMap.init();
 	
 	var defaultService = "http://crwr-arcgis10.austin.utexas.edu/ArcGIS/rest/services/WorldWaterOnline/WatershedExplorer_Discharge/MapServer";
@@ -58,7 +60,7 @@
 	}
 	
 	var mainChart = new WMLChart();
-	mainChart.title = "WWO Stream Gages";
+	mainChart.title = "Streamflow";
 	mainChart.chartDiv = "chart";
 	mainChart.tableDiv = "table";
 	mainChart.init();	
