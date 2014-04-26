@@ -187,6 +187,7 @@ function AdjustStartDate (url, date) {
 	return urlAdj;
 }
 function AdjustEndDate (url, date) {
+	//Function Stub
 	//Changes the given url to request ending at a specified date	
 	var urlAdj = url;
 	return urlAdj;
@@ -252,7 +253,7 @@ function GetObservations(xml) {
 	if(WaterMLVersion == 1){
 		query = includeNamespace ? "ns1\\:timeSeries" : "timeSeries";
 	} else {
-		query = includeNamespace ? "wml2\\:observationMember" : "observationMember";
+		query = includeNamespace ? "om\\:OM_Observation" : "OM_Observation";
 	}
 	return xml.find(query);	
 }
@@ -469,10 +470,10 @@ function getNextColor(){
 
 function GetWMLVersion(xml){
 	var version;
-	if (xml.find('wml2\\:Collection').length>0) {
+	if (xml.find('om\\:OM_Observation').length>0) {
 		version = 2;
 		includeNamespace = true;
-	} else if (xml.find('Collection').length>0) {
+	} else if (xml.find('OM_Observation').length>0) {
 		version = 2;
 		includeNamespace = false;		
 	} else if (xml.find('ns1\\:timeSeriesResponse').length>0){
