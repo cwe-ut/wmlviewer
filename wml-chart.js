@@ -367,16 +367,16 @@ function GetValues(observation) {
 		}
 		else {
 			query = includeNamespace ? "wml2\\:time" : "time";				
-			xText=$($(points[j]).find(query)[0]).text();				
+			xText=$($(points[j]).find(query)[0]).text();
 			query = includeNamespace ? "wml2\\:value" : "value";				
 			yText = $($(points[j]).find(query)[0]).text();
 		}
-
-		x = parseISO8601Date(xText);
-
-		y = parseFloat(yText);
-		yRound = isNaN(y) ? null : roundToSignificantFigures(y, 4);
-		result.push([x, yRound]);
+		if (xText) {
+			x = parseISO8601Date(xText);
+			y = parseFloat(yText);
+			yRound = isNaN(y) ? null : roundToSignificantFigures(y, 4);
+			result.push([x, yRound]);
+		}
 	}
 	return result;
 }
@@ -499,6 +499,7 @@ function parseISO8601Date(s){
   var re = /(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(\.\d+)?(Z|([+-])(\d\d):(\d\d))/;
   var re2 = /(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(\.\d+)/;
   var re3 = /(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)/;
+  var re4 = /(\d{4})-(\d\d)-(\d\d)/;
   var d = [];
   d = s.match(re);
  
@@ -511,13 +512,22 @@ function parseISO8601Date(s){
   // "2010-12-07T11:00:00" parses to:
   //  ["2010-12-07T11:00:00.000Z", "2010", "12", "07", "11", 
   //     "00", "00", undefined, undefined, undefined, undefined, undefined]
+  // "2010-12-07" parses to:
+  // ["2010-12-07", "2010", "12", "07", "undefined", 
+  //     "undefined", "undefined", undefined, undefined, undefined, undefined, undefined]
  
   if (! d) {
 	d = s.match(re2);  
 	if (! d) {  
 		d = s.match(re3)
 		if (! d) {
-		    throw "Couldn't parse ISO 8601 date string '" + s + "'";
+			d = s.match(re4)
+			if (! d) {
+			    throw "Couldn't parse ISO 8601 date string '" + s + "'";
+			}
+			d[4] = 0;
+			d[5] = 0;
+			d[6] = 0;
 		}
 	}
   }
@@ -529,11 +539,11 @@ function parseISO8601Date(s){
   }
   d[7] = parseFloat(d[7]);
  
+ 
   // Date.UTC(year, month[, date[, hrs[, min[, sec[, ms]]]]])
   // note that month is 0-11, not 1-12
   // see https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/UTC
   var ms = Date.UTC(d[1], d[2] - 1, d[3], d[4], d[5], d[6]);
- 
   // if there are milliseconds, add them
   if (d[7] > 0) {  
     ms += Math.round(d[7] * 1000);
