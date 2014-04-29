@@ -41,7 +41,7 @@
 <script>
 	//Get parameters
 	var urlObj = GetUrlObject();
-	var initialExtent = [];
+	var initialExtent = {}; // e.g., {ymin:-59,ymax:72}, {xmin:-160,xmax:160,ymin:-59,ymax:72}
 	var chartTitle = "WaterML Viewer";
 	//Provide default feature service
 	var featureService = "http://crwr-arcgis10.austin.utexas.edu/ArcGIS/rest/services/WorldWaterOnline/WatershedExplorer_Discharge/MapServer";
