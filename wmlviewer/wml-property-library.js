@@ -1,5 +1,7 @@
 //This property list can be expanded as needed. dimensions and displayUnits should reference unitsList
 //displayUnits are the units used in display, and can be changed to any unit or synonym in the corresponding dimensions list.
+
+	
 var propertyList = {
 	properties: [
 		{
@@ -19,6 +21,12 @@ var propertyList = {
 			dimensions: "L",
 			displayUnits: "in",
 			synonyms: ["Precipitation", "IntervalPrecip", "Rainfall Total (1 day)"],
+		},
+		{
+			name: "Soil Moisture",
+			dimensions: "M/L^2",
+			displayUnits: "kg/m^2",
+			synonyms: ["Soil Moisture", "0-100 cm layer 1 Soil moisture content"],
 		},
 	]
 };
@@ -71,7 +79,18 @@ var unitsList = {
 					toCommon: 0.001,
 				},
 			]
-		},		
+		},
+		{
+			name: "M/L^2",
+			commonUnit: "kg/m^2",
+			units: [
+				{
+					name: "kg/m^2",
+					synonyms: ["kg/m^2", "Kilograms per square meter"],
+					toCommon: 1,
+				},
+			]
+		},
 	]
 };
 

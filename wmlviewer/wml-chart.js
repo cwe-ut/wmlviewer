@@ -7,8 +7,7 @@
 
 //****GLOBAL VARIABLES****
 
-//Some WaterML servers don't allow Cross Domain Requests, so a proxy must be used.
-var proxy = "esri-proxy/proxy.php";
+
 var curChart;
 
 //Some browsers require namespaces, others don't work with them. 
@@ -321,12 +320,17 @@ function GetPropertyDefaults(property, sourceUnits, observation) {
 	
 	conversionFactor = ConvertUnits(dimensions, sourceUnits, displayUnits);
 	
-	//WML Version 1 services use unitCode vs. unitAbbreviation differently. This checks whether the other approach should be tried.
+	//WML Version 1 services use unitCode, unitAbbreviation, and units differently. This checks whether the other approach should be tried.
 	if (conversionFactor <0) {
 		query = includeNamespace ? "ns1\\:unitAbbreviation" : "unitAbbreviation";
 		sourceUnits=$($(observation).find(query)[0]).text();
 		conversionFactor = ConvertUnits(dimensions, sourceUnits, displayUnits);				
 	}	
+	if (conversionFactor <0) {
+		query = includeNamespace ? "ns1\\:units" : "units";
+		sourceUnits=$($(observation).find(query)[0]).text();
+		conversionFactor = ConvertUnits(dimensions, sourceUnits, displayUnits);				
+	}		
 	
 	if (conversionFactor <0){
 		//Unknown units
