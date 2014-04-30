@@ -289,10 +289,14 @@ function GetUnits(observation) {
 	} else {
 		query = includeNamespace ? "wml2\\:uom" : "uom";		
 		result = $($(observation).find(query)[0]).attr("code");
-		//some WML services use attribute "uom" rather than "code". 
+		//some WML services use attribute "uom" or "title" rather than "code". 
 		if (result == undefined) {
 			result = $($(observation).find(query)[0]).attr("uom");
 		}
+		if (result == undefined) {
+			result = $($(observation).find(query)[0]).attr("xlink:title");
+		}		
+		
 	}
 	result = result ? result : ""; //prevents null exceptions
 	return result;
