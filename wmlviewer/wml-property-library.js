@@ -28,6 +28,12 @@ var propertyList = {
 			displayUnits: "kg/m^2",
 			synonyms: ["Soil Moisture", "0-100 cm layer 1 Soil moisture content"],
 		},
+		{
+			name: "Storage",
+			dimensions: "L^3",
+			displayUnits: "acre-ft",
+			synonyms: ["Storage", "Reservoir Storage", "ResV"],
+		}
 	]
 };
 
@@ -91,7 +97,21 @@ var unitsList = {
 				},
 			]
 		},
+		{
+			name: "L^3",
+			commonUnit: "m^3",
+			units: [
+				{
+					name: "m^3",
+					synonyms: ["m^3", "cubic meter", "cubic meters"],
+					toCommon: 1,
+				},
+				{
+					name: "acre-ft",
+					synonyms: ["acre-ft", "acre-feet", "acre-foot", "ac-ft"],
+					toCommon: 1233.48185532
+				}
+			]
+		}
 	]
 };
-
-
