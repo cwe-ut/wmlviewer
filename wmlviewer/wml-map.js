@@ -68,16 +68,20 @@ function AddFeatureService(featureService){
 	require([
         "esri/layers/ArcGISDynamicMapServiceLayer",
 		"esri/tasks/query",
+        "esri/tasks/QueryTask",
 		"esri/layers/FeatureLayer",
-    ], function (ArcGISDynamicMapServiceLayer, FeatureLayer) { 
-		var service = new ArcGISDynamicMapServiceLayer(featureService, {});
+        "esri/layers/ImageParameters"
+    ], function (ArcGISDynamicMapServiceLayer, Query, QueryTask, FeatureLayer, ImageParameters) { 
+        var imgParams = new ImageParameters();
+        imgParams.format = "png32"; // Honors transparency set by map service
+		var service = new ArcGISDynamicMapServiceLayer(featureService, {imageParameters: imgParams});
 		curMap.map.addLayer(service);
 			
 		//Define click behavior		
 		dojo.connect(curMap.map, "onClick", executeQueryTask);
 		var layer = featureService + "/0";
-		queryTask = new esri.tasks.QueryTask(layer);
-		query = new esri.tasks.Query();
+		queryTask = new QueryTask(layer);
+		query = new Query();
 		query.outFields = ["SiteName", "WaterML", "Source"];		
 	})	
 }
