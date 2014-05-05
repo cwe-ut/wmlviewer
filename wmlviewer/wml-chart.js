@@ -14,6 +14,7 @@ var curChart;
 //Note: attributes require namespaces (without escapce sequence \\) in all browsers tested
 var includeNamespace = null;
 var WaterMLVersion;
+var sigFigs = 4;
 //******END GLOBAL VARIABLES******
 
 //****CHART WIDGET****
@@ -133,8 +134,10 @@ function AddWaterML(xmlLink, linkSettings) {
 			propertyDefaults = GetPropertyDefaults(observedProperty, sourceUnits, observations[i]);
 			//Get series values
 			seriesValues = GetValues(observations[i]);
+			//Convert series units
+			seriesValuesConverted = ConvertPointUnits(seriesValues,propertyDefaults.dimensions, propertyDefaults.sourceUnits, propertyDefaults.displayUnits);
 			//Add series to chart and table
-			AddSeries(seriesValues,seriesName,propertyDefaults, xmlLinkAdj);
+			AddSeries(seriesValuesConverted,seriesName,propertyDefaults, xmlLinkAdj);
 		}
 	}
 }
@@ -382,7 +385,7 @@ function GetValues(observation) {
 		if (xText) {
 			x = parseISO8601Date(xText);
 			y = parseFloat(yText);
-			yRound = isNaN(y) ? null : roundToSignificantFigures(y, 4);
+			yRound = isNaN(y) ? null : roundToSignificantFigures(y, sigFigs);
 			result.push([x, yRound]);
 		}
 	}
@@ -397,8 +400,8 @@ function ConvertPointUnits(series, dimensions, fromUnit, toUnit){
 	var conversionFactor = ConvertUnits(dimensions, fromUnit, toUnit);
 	result = series;
 	if (conversionFactor>0){
-		for (point in result){
-			point[1] = point[1] * conversionFactor;
+		for (var i=0; i<result.length;i++){
+			result[i][1] = isNaN(result[i][1]) ? null : roundToSignificantFigures(result[i][1] * conversionFactor, sigFigs);
 		}
 	}
 	return result;
