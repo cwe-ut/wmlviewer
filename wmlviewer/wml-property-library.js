@@ -20,14 +20,31 @@ var propertyList = {
 			name: "Precipitation",
 			dimensions: "L",
 			displayUnits: "in",
-			synonyms: ["Precipitation", "IntervalPrecip", "Rainfall Total (1 day)"],
+			synonyms: [
+                "Precipitation", 
+                "IntervalPrecip", 
+                "Rainfall Total (1 day)", 
+                "Precipitation hourly total"
+            ]
 		},
 		{
+			name: "Evaporation",
+			dimensions: "L",
+			displayUnits: "in", 
+			synonyms: ["Evaporation", "Evapotranspiration", "total evapotranspiration"]
+		},			
+        {
 			name: "Soil Moisture",
 			dimensions: "M/L^2",
 			displayUnits: "kg/m^2",
 			synonyms: ["Soil Moisture", "0-100 cm layer 1 Soil moisture content"],
 		},
+		{
+			name: "Storage",
+			dimensions: "L^3",
+			displayUnits: "acre-ft",
+			synonyms: ["Storage", "Reservoir Storage", "ResV"],
+		}
 	]
 };
 
@@ -78,6 +95,11 @@ var unitsList = {
 					synonyms: ["mm", "millimeter", "millimetre"],
 					toCommon: 0.001,
 				},
+                {
+					name: "kg water/m^2",
+					synonyms: ["kg water/m^2", "kg/m^2", "Kilograms per square meter"],
+					toCommon: 0.001
+				}
 			]
 		},
 		{
@@ -91,7 +113,21 @@ var unitsList = {
 				},
 			]
 		},
+		{
+			name: "L^3",
+			commonUnit: "m^3",
+			units: [
+				{
+					name: "m^3",
+					synonyms: ["m^3", "cubic meter", "cubic meters"],
+					toCommon: 1,
+				},
+				{
+					name: "acre-ft",
+					synonyms: ["acre-ft", "acre-feet", "acre-foot", "ac-ft"],
+					toCommon: 1233.48185532
+				}
+			]
+		}
 	]
 };
-
-
