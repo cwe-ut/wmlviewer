@@ -20,9 +20,20 @@ var propertyList = {
 			name: "Precipitation",
 			dimensions: "L",
 			displayUnits: "in",
-			synonyms: ["Precipitation", "IntervalPrecip", "Rainfall Total (1 day)"],
+			synonyms: [
+                "Precipitation", 
+                "IntervalPrecip", 
+                "Rainfall Total (1 day)", 
+                "Precipitation hourly total"
+            ]
 		},
 		{
+			name: "Evaporation",
+			dimensions: "L",
+			displayUnits: "in", 
+			synonyms: ["Evaporation", "Evapotranspiration", "total evapotranspiration"]
+		},			
+        {
 			name: "Soil Moisture",
 			dimensions: "M/L^2",
 			displayUnits: "kg/m^2",
@@ -84,6 +95,11 @@ var unitsList = {
 					synonyms: ["mm", "millimeter", "millimetre"],
 					toCommon: 0.001,
 				},
+                {
+					name: "kg water/m^2",
+					synonyms: ["kg water/m^2", "kg/m^2", "Kilograms per square meter"],
+					toCommon: 0.001
+				}
 			]
 		},
 		{
