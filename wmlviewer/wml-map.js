@@ -22,6 +22,7 @@ function WMLMap() {
     }
     this.AddFeatureService = function(featureService) {
         curMap = self;
+		AddFeatureService(featureService);
         self.featureServices.push(featureService);
     }
 }

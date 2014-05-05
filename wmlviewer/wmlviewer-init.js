@@ -16,23 +16,7 @@ var mainMap = new WMLMap();
 mainMap.chartVariableName = "mainChart"; //This links the map to the chart and should match the chart variable defined below
 mainMap.mapDiv = mapDiv;
 mainMap.init(initialExtent);
-
-//Add Feature Services to Map
-if (isArray(featureService)){
-	for (var i = 0; i < featureService.length; i++){
-		try {
-			mainMap.AddFeatureService(featureService[i]);
-		} catch(err) {
-			console.log("Invalid feature service provided in URL")
-		}			
-	}
-} else {
-	try {
-		mainMap.AddFeatureService(featureService);
-	} catch(err) {
-		console.log("Invalid feature service provided in URL")
-	}
-}
+AddServices();
 
 //Initialize Chart
 var mainChart = new WMLChart();
@@ -41,6 +25,36 @@ mainChart.chartDiv = chartDiv;
 mainChart.tableDiv = tableDiv;
 mainChart.init();	
 
+//Add Feature Services to Map
+//This delays itself until the map has been created and loaded.
+function AddServices(){
+	if(mainMap.map){
+		if (mainMap.map.loaded)
+		{
+			if (isArray(featureService)){
+				for (var i = 0; i < featureService.length; i++){
+					try {
+						mainMap.AddFeatureService(featureService[i]);
+					} catch(err) {
+						console.log("Invalid feature service provided in URL")
+					}			
+				}
+			} else {
+				try {
+					mainMap.AddFeatureService(featureService);
+				} catch(err) {
+					console.log("Invalid feature service provided in URL")
+				}
+			}
+			} else{
+				//Wait and try again
+				setTimeout(AddServices,50);
+		}
+	} else{
+		//Wait and try again
+		setTimeout(AddServices,50);
+	}
+}
 	
 function GetUrlObject(options) {
 	//From https://gist.github.com/aymanfarhat/5608517
