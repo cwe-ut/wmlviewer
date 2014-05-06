@@ -1,6 +1,6 @@
 //This property list can be expanded as needed. dimensions and displayUnits should reference unitsList
 //displayUnits are the units used in display, and can be changed to any unit or synonym in the corresponding dimensions list.
-
+"use strict"
 	
 var propertyList = {
 	properties: [
@@ -8,18 +8,21 @@ var propertyList = {
 			name: "Discharge",
 			dimensions: "L^3/T",
 			displayUnits: "cfs",
+			seriesType: "area",
 			synonyms: ["Discharge", "Q", "Streamflow, ft&#179;/s", "Flow"],
 		},
 		{
 			name: "Runoff",
 			dimensions: "L",
 			displayUnits: "in", 
+			seriesType: "column",
 			synonyms: ["Runoff"],
 		},	
 		{
 			name: "Precipitation",
 			dimensions: "L",
 			displayUnits: "in",
+			seriesType: "column",			
 			synonyms: [
                 "Precipitation", 
                 "IntervalPrecip", 
@@ -30,19 +33,22 @@ var propertyList = {
 		{
 			name: "Evaporation",
 			dimensions: "L",
-			displayUnits: "in", 
+			displayUnits: "in",
+			seriesType: "area", 
 			synonyms: ["Evaporation", "Evapotranspiration", "total evapotranspiration"]
 		},			
         {
 			name: "Soil Moisture",
 			dimensions: "M/L^2",
 			displayUnits: "kg/m^2",
+			seriesType: "area",			
 			synonyms: ["Soil Moisture", "0-100 cm layer 1 Soil moisture content"],
 		},
 		{
 			name: "Storage",
 			dimensions: "L^3",
 			displayUnits: "acre-ft",
+			seriesType: "area",			
 			synonyms: ["Storage", "Reservoir Storage", "ResV"],
 		}
 	]
