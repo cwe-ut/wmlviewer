@@ -80,8 +80,9 @@ function AddFeatureService(featureService){
         dojo.connect(curMap.map, "onClick", executeQueryTask);
         var layer = featureService + "/0";
         queryTask = new QueryTask(layer);
-        query = new Query();
+        var query = new Query();
         query.outFields = ["SiteName", "WaterML", "Source"];		
+        curMap.query = query;
     })	
 }
 //********END MAP METHODS********************
@@ -92,6 +93,7 @@ function executeQueryTask(evt) {
             (evt.mapPoint.x,evt.mapPoint.y,evt.mapPoint.spatialReference);
     var querybox;
     querybox = pointToExtent(curMap.map,centerPoint, 10);
+    var query = curMap.query;
     query.geometry = querybox;
 
     //Execute task and call showResults on completion
@@ -130,7 +132,7 @@ function showFeature(feature,evt) {
     //construct infowindow title and content
     var title = "";
     var content;
-    
+
     var siteNameLabel = 'Site Name: ' + feature.attributes.SiteName + '</br>';
     var dataProviderLabel = 'Data Provider: ' + feature.attributes.Source + '</br>';
     var addToChartButtonLabel = '<button dojoType="dijit.form.Button" type="button" style="width:100%" onClick="javascript:' + curMap.chartVariableName + '.AddLink(' + "'" + feature.attributes.WaterML + "'" + ');CloseWindow();">Add to Chart</button></br>';
