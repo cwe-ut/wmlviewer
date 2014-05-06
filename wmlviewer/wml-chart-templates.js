@@ -1,4 +1,3 @@
-// JavaScript Document
 //This file contains various templates that adjust the look and feel of the basic Highchart, such as adding custom buttons.
 
 //Template used by World Water Online

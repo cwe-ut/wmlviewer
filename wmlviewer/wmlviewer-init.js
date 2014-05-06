@@ -1,4 +1,3 @@
-// JavaScript Document
 //Get URL parameters
 var urlObj = GetUrlObject();
 
