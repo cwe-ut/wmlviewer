@@ -1,6 +1,6 @@
 //This requires the following javascript to be included:
 //http://js.arcgis.com/3.9compact/
-"use strict"
+"use strict";
 //*******MAP WIDGET***************
 //This object-oriented approach needs refinement. Currently does not behave properly if multiple versions of a map are instantiated in the same document.
 function WMLMap() {
