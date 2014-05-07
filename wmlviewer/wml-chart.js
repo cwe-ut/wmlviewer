@@ -1,9 +1,8 @@
-<!--Charting Scripts-->
 //This requires the following javascript to be included in the header:
 //jquery (tested on jquery.1.9.1.min.js), highcharts/highcharts.js, highcharts/modules/exporting.js, highcharts/modules/export-csv.js, wml-chart-templates.js and wml-property-library.js
 
 //jquery is used for XML navigation as the .getElementsByTagName method had issues with cross browser compatability
-"use strict"
+"use strict";
 
 //****CHART WIDGET****
 function WMLChart() {

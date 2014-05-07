@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 //*****INITIALIZE GLOBAL VARIABLES**********
 var wmlviewer = {

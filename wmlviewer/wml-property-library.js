@@ -1,6 +1,6 @@
 //This property list can be expanded as needed. dimensions and displayUnits should reference unitsList
 //displayUnits are the units used in display, and can be changed to any unit or synonym in the corresponding dimensions list.
-"use strict"
+"use strict";
 	
 var propertyList = {
 	properties: [
@@ -38,6 +38,12 @@ var propertyList = {
 			synonyms: ["Evaporation", "Evapotranspiration", "total evapotranspiration"]
 		},			
         {
+			name: "Water Level",
+			dimensions: "L",
+			displayUnits: "ft",
+			seriesType: "area",			
+			synonyms: ["Water Level", "S"],
+		},        {
 			name: "Soil Moisture",
 			dimensions: "M/L^2",
 			displayUnits: "kg/m^2",
@@ -91,6 +97,11 @@ var unitsList = {
 					synonyms: ["cm","centimeter", "centimetre"],
 					toCommon: 0.01,
 				},		
+				{
+					name: "ft",
+					synonyms: ["ft","foot", "feet"],
+					toCommon: 0.3048
+				},	
 				{
 					name: "in",
 					synonyms: ["in", "inch"],
