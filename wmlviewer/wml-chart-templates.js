@@ -1,5 +1,5 @@
 //This file contains various templates that adjust the look and feel of the basic Highchart, such as adding custom buttons.
-
+"use strict"
 //Template used by World Water Online
 var wwoTemplate = {
     chart: {
@@ -52,7 +52,7 @@ var wwoTemplate = {
 				},
 				align: 'right',
 				x: -30,
-				symbol: 'url(' + wmlviewerPath + 'images/subtract-icon.png)',
+				symbol: 'url(' + wmlviewer.wmlviewerPath + 'images/subtract-icon.png)',
 				_titleKey: 'removeHidden_key',
 			},
 			removeAllSeries: {
@@ -61,7 +61,7 @@ var wwoTemplate = {
 				},
 				align: 'right',
 				x: 0,
-				symbol: 'url(' + wmlviewerPath + 'images/close-icon.png)',
+				symbol: 'url(' + wmlviewer.wmlviewerPath + 'images/close-icon.png)',
 				_titleKey: 'removeAll_key',
 			},			
 			downloadCSV: {
@@ -73,7 +73,7 @@ var wwoTemplate = {
 				align: 'right',
 				x: -60,
 				//symbol: 'triangle-down',
-				symbol: 'url(' + wmlviewerPath + 'images/download-icon.png)',
+				symbol: 'url(' + wmlviewer.wmlviewerPath + 'images/download-icon.png)',
 				_titleKey: 'download_key',
 			}			
 		}

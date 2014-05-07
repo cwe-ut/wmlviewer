@@ -1,19 +1,9 @@
+<!--Charting Scripts-->
 //This requires the following javascript to be included in the header:
 //jquery (tested on jquery.1.9.1.min.js), highcharts/highcharts.js, highcharts/modules/exporting.js, highcharts/modules/export-csv.js, wml-chart-templates.js and wml-property-library.js
 
 //jquery is used for XML navigation as the .getElementsByTagName method had issues with cross browser compatability
-
-//****GLOBAL VARIABLES****
-
-
-var curChart;
-
-//Some browsers require namespaces, others don't work with them. 
-//Note: attributes require namespaces (without escapce sequence \\) in all browsers tested
-var includeNamespace = null;
-var WaterMLVersion;
-var sigFigs = 4;
-//******END GLOBAL VARIABLES******
+"use strict"
 
 //****CHART WIDGET****
 function WMLChart() {
@@ -27,30 +17,30 @@ function WMLChart() {
 	
 	this.init = function() {
 		//Initialize Chart
-		curChart = self;
-		curChart.highchartOptions.chart.renderTo = curChart.chartDiv;
-		curChart.highchartOptions.title.text = curChart.title;
-		curChart.chart = new Highcharts.Chart(curChart.highchartOptions);		
+		wmlviewer.curChart = self;
+		wmlviewer.curChart.highchartOptions.chart.renderTo = wmlviewer.curChart.chartDiv;
+		wmlviewer.curChart.highchartOptions.title.text = wmlviewer.curChart.title;
+		wmlviewer.curChart.chart = new Highcharts.Chart(wmlviewer.curChart.highchartOptions);		
 		
 		//Initialize Table
-		if (curChart.tableDiv){
-			curChart.WMLTable = new WMLTable();
-			curChart.WMLTable.tableDiv = curChart.tableDiv;
-			curChart.WMLTable.init()
+		if (wmlviewer.curChart.tableDiv){
+			wmlviewer.curChart.WMLTable = new WMLTable();
+			wmlviewer.curChart.WMLTable.tableDiv = wmlviewer.curChart.tableDiv;
+			wmlviewer.curChart.WMLTable.init()
 		}		
 	}
 	
 	this.AddLink = function(wmlLink, linkSettings) {
-		curChart = self;
+		wmlviewer.curChart = self;
 		AddWaterML(wmlLink,linkSettings);
 	}
 	
 	this.RemoveHiddenSeries = function() {
-		curChart = self;
+		wmlviewer.curChart = self;
 		RemoveHiddenSeries();
 	}
 	this.RemoveAllSeries = function() {
-		curChart = self;
+		wmlviewer.curChart = self;
 		RemoveAllSeries();
 	}
 }
@@ -60,6 +50,7 @@ function WMLChart() {
 //Created automatically by the Chart Widget
 function WMLTable() {
 	var self = this;
+	var header, row;
 	this.tableDiv = null;
 	this.id = "wmlTable";
 	this.headings = ["Site Name", "Property", "Data Source"];
@@ -69,8 +60,8 @@ function WMLTable() {
 		self.table = document.createElement('table');
 		$('#' + self.tableDiv).append(self.table);
 		
-		var header = self.table.createTHead();
-		var row = header.insertRow();
+		header = self.table.createTHead();
+		row = header.insertRow();
 		for (var i=0; i<self.headings.length; i++){
 			AddTableElement(row, "th", self.headings[i]);
 		}
@@ -83,9 +74,12 @@ function WMLTable() {
 function AddWaterML(xmlLink, linkSettings) {
 	//Given a link to a WML1 or WML2 server, parse XML and add to chart
 	//linkSettings are optional
+	var defaults, xmlLinkAdj, xmlDoc, xml;
+	var observations, seriesName, observedProperty, sourceUnits;
+	var propertyDefaults, seriesValues, seriesValuesConverted;
 	
 	//Default linkOptions
-	var defaults = {
+	defaults = {
 		startDate: null,
 		endDate: null,
 		previousPeriod: null,
@@ -94,7 +88,7 @@ function AddWaterML(xmlLink, linkSettings) {
 	linkSettings = $.extend(true,{}, defaults, linkSettings);
 	
 	//Adjust period prior to server request
-	var xmlLinkAdj =  xmlLink;
+	xmlLinkAdj =  xmlLink;
 	if (linkSettings.previousPeriod) {
 		AdjustPeriod(xmlLinkAdj, linkSettings.previousPeriod, linkSettings.previousUnits);
 	} else {
@@ -107,7 +101,7 @@ function AddWaterML(xmlLink, linkSettings) {
 	} 
 
 	//Send link to server and get XML document
-	var xmlDoc = loadXMLDoc(xmlLinkAdj);
+	xmlDoc = loadXMLDoc(xmlLinkAdj);
 	if (xmlDoc == -1) {
 		return -1;
 	}
@@ -118,12 +112,12 @@ function AddWaterML(xmlLink, linkSettings) {
 	//Identify WML version and includeNamespace value 
 	GetWMLVersion(xml); //currently defined as global variables. may want to restrict the scope
 	
-	if (WaterMLVersion < 1) {
+	if (wmlviewer.WaterMLVersion < 1) {
 		alert("Error adding series: WaterML Version not recognized");
 		return null		
 	} else {
 		//Extract data from xml and add to chart
-		var observations = GetObservations(xml); //WaterML2 allows for multiple time series observations per file, though typically there will be only one.
+		observations = GetObservations(xml); //WaterML2 allows for multiple time series observations per file, though typically there will be only one.
 		for (var i=0;i<observations.length;i++) {
 			//Get series metadata
 			seriesName = GetSiteName(observations[i]);
@@ -142,33 +136,33 @@ function AddWaterML(xmlLink, linkSettings) {
 function RemoveHiddenSeries(){
 	//Remove all hidden series
 	//Start from the highest index so the subsequent indices don't change
-	var curSeries = curChart.chart.series.length - 1;
+	var curSeries = wmlviewer.curChart.chart.series.length - 1;
 		
 	while (curSeries > -1){
-		if (curChart.chart.series[curSeries].visible == false) {
-			curChart.chart.series[curSeries].remove(false);
-			curChart.highchartOptions.series.splice(curSeries, 1);
-			if (curChart.WMLTable) {
-				curChart.WMLTable.table.deleteRow(curSeries+1);
+		if (wmlviewer.curChart.chart.series[curSeries].visible == false) {
+			wmlviewer.curChart.chart.series[curSeries].remove(false);
+			wmlviewer.curChart.highchartOptions.series.splice(curSeries, 1);
+			if (wmlviewer.curChart.WMLTable) {
+				wmlviewer.curChart.WMLTable.table.deleteRow(curSeries+1);
 			}
 		} 
 		curSeries = curSeries - 1;
 	}
-	curChart.chart.redraw();	
+	wmlviewer.curChart.chart.redraw();	
 }
 function RemoveAllSeries(){
-	var curSeries = curChart.chart.series.length - 1;
+	var curSeries = wmlviewer.curChart.chart.series.length - 1;
 		
 	while (curSeries > -1){
-		curChart.chart.series[curSeries].remove(false);
-		curChart.highchartOptions.series.splice(curSeries, 1);
-		if (curChart.WMLTable) {
-			curChart.WMLTable.table.deleteRow(curSeries+1);
+		wmlviewer.curChart.chart.series[curSeries].remove(false);
+		wmlviewer.curChart.highchartOptions.series.splice(curSeries, 1);
+		if (wmlviewer.curChart.WMLTable) {
+			wmlviewer.curChart.WMLTable.table.deleteRow(curSeries+1);
 		}
 		 
 		curSeries = curSeries - 1;
 	}
-	curChart.chart.redraw();		
+	wmlviewer.curChart.chart.redraw();		
 }
 //****END CHART METHODS****
 
@@ -197,24 +191,16 @@ function AdjustEndDate (url, date) {
 function AddSeries(values, seriesName, propertyDefaults, url){
 	//Function Stub
 	//Set appropriate series chart options and add series to chart
-	var seriesType;
-	var seriesColor;
+	var seriesOptions, seriesColor;
 	var fullLabel = propertyDefaults.propertyLabel + " (" + propertyDefaults.displayUnits + ")";
 	var axis = FindAxis(fullLabel);	
-
-	//Initialize series options
-	
-	if (propertyDefaults.propertyLabel == "Precipitation") {
-		seriesType = 'column';
-	} else {
-		seriesType = 'area';
-	}
+	var tableBody, row, rowValues;
 
 	seriesColor = getNextColor();
 	
-	var seriesOptions = {
+	seriesOptions = {
 		name: seriesName,
-		type: seriesType,
+		type: propertyDefaults.seriesType,
 		color: seriesColor,
 		yAxis: axis,
 		fillColor: {
@@ -230,17 +216,17 @@ function AddSeries(values, seriesName, propertyDefaults, url){
 	}
 
 	//Add series to options
-	curChart.highchartOptions.series.push(seriesOptions);
+	wmlviewer.curChart.highchartOptions.series.push(seriesOptions);
 		
 	//redraw chart
-	curChart.chart = new Highcharts.Chart(curChart.highchartOptions)
+	wmlviewer.curChart.chart = new Highcharts.Chart(wmlviewer.curChart.highchartOptions)
 			
 	//update table
-	if (curChart.WMLTable) {
-		var tableBody = curChart.WMLTable.table.getElementsByTagName('tbody')[0];
-		var row = tableBody.insertRow(tableBody.rows.length);
+	if (wmlviewer.curChart.WMLTable) {
+		tableBody = wmlviewer.curChart.WMLTable.table.getElementsByTagName('tbody')[0];
+		row = tableBody.insertRow(tableBody.rows.length);
 
-		var rowValues = [seriesName, curChart.highchartOptions.yAxis[seriesOptions.yAxis].title.text, '<a href="' + url + '" target="_blank">WaterML</a>'];
+		rowValues = [seriesName, wmlviewer.curChart.highchartOptions.yAxis[seriesOptions.yAxis].title.text, '<a href="' + url + '" target="_blank">WaterML</a>'];
 		for (var i=0; i<rowValues.length;i++){
 			AddTableElement(row, 'td', rowValues[i]);
 		}
@@ -250,21 +236,21 @@ function AddSeries(values, seriesName, propertyDefaults, url){
 //***PARSE XML***
 function GetObservations(xml) {
 	var query;
-	if(WaterMLVersion == 1){
-		query = includeNamespace ? "ns1\\:timeSeries" : "timeSeries";
+	if(wmlviewer.WaterMLVersion == 1){
+		query = wmlviewer.includeNamespace ? "ns1\\:timeSeries" : "timeSeries";
 	} else {
-		query = includeNamespace ? "om\\:OM_Observation" : "OM_Observation";
+		query = wmlviewer.includeNamespace ? "om\\:OM_Observation" : "OM_Observation";
 	}
 	return xml.find(query);	
 }
 function GetSiteName(observation){
 	var query;
 	var result = null;
-	if(WaterMLVersion == 1){
-		query = includeNamespace ? "ns1\\:siteName" : "siteName";
+	if(wmlviewer.WaterMLVersion == 1){
+		query = wmlviewer.includeNamespace ? "ns1\\:siteName" : "siteName";
 		result=$($(observation).find(query)[0]).text();
 	} else {
-		query = includeNamespace ? "om\\:featureOfInterest" : "featureOfInterest";
+		query = wmlviewer.includeNamespace ? "om\\:featureOfInterest" : "featureOfInterest";
 		result=$($(observation).find(query)[0]).attr("xlink:title");
 	}	
 	return result;
@@ -272,11 +258,11 @@ function GetSiteName(observation){
 function GetObservedProperty(observation) {
 	var query;
 	var result = null;
-	if(WaterMLVersion == 1) {
-		query = includeNamespace ? "ns1\\:variableName" : "variableName";
+	if(wmlviewer.WaterMLVersion == 1) {
+		query = wmlviewer.includeNamespace ? "ns1\\:variableName" : "variableName";
 		result=$($(observation).find(query)[0]).text();
 	} else {
-		query = includeNamespace ? "om\\:observedProperty" : "observedProperty";
+		query = wmlviewer.includeNamespace ? "om\\:observedProperty" : "observedProperty";
 		result = $($(observation).find(query)[0]).attr("xlink:title");
 	}
 	return result;
@@ -284,11 +270,11 @@ function GetObservedProperty(observation) {
 function GetUnits(observation) {
 	var query;
 	var result = null;
-	if(WaterMLVersion == 1) {
-		query = includeNamespace ? "ns1\\:unitCode" : "unitCode";
+	if(wmlviewer.WaterMLVersion == 1) {
+		query = wmlviewer.includeNamespace ? "ns1\\:unitCode" : "unitCode";
 		result=$($(observation).find(query)[0]).text();					
 	} else {
-		query = includeNamespace ? "wml2\\:uom" : "uom";		
+		query = wmlviewer.includeNamespace ? "wml2\\:uom" : "uom";		
 		result = $($(observation).find(query)[0]).attr("code");
 		//some WML services use attribute "uom" or "title" rather than "code". 
 		if (result == undefined) {
@@ -304,10 +290,12 @@ function GetUnits(observation) {
 }
 function GetPropertyDefaults(property, sourceUnits, observation) {
 	//Searches the attached wml-property-library.js for the 
+	var query;
 	var result = [];
 	var propertyLabel = "";
 	var dimensions = "";
 	var displayUnits = "";
+	var seriesType = "area";
 	var conversionFactor;
 	for(var j=0;j<propertyList.properties.length;j++){
 		for(var k=0;k<propertyList.properties[j].synonyms.length;k++){
@@ -315,6 +303,7 @@ function GetPropertyDefaults(property, sourceUnits, observation) {
 				propertyLabel = propertyList.properties[j].name;
 				dimensions = propertyList.properties[j].dimensions;
 				displayUnits = propertyList.properties[j].displayUnits;
+				seriesType = propertyList.properties[j].seriesType;
 			}
 		}
 	}
@@ -327,12 +316,12 @@ function GetPropertyDefaults(property, sourceUnits, observation) {
 	
 	//WML Version 1 services use unitCode, unitAbbreviation, and units differently. This checks whether the other approach should be tried.
 	if (conversionFactor <0) {
-		query = includeNamespace ? "ns1\\:unitAbbreviation" : "unitAbbreviation";
+		query = wmlviewer.includeNamespace ? "ns1\\:unitAbbreviation" : "unitAbbreviation";
 		sourceUnits=$($(observation).find(query)[0]).text();
 		conversionFactor = ConvertUnits(dimensions, sourceUnits, displayUnits);				
 	}	
 	if (conversionFactor <0) {
-		query = includeNamespace ? "ns1\\:units" : "units";
+		query = wmlviewer.includeNamespace ? "ns1\\:units" : "units";
 		sourceUnits=$($(observation).find(query)[0]).text();
 		conversionFactor = ConvertUnits(dimensions, sourceUnits, displayUnits);				
 	}		
@@ -349,41 +338,41 @@ function GetPropertyDefaults(property, sourceUnits, observation) {
 		'dimensions': dimensions, 
 		'sourceUnits': sourceUnits, 
 		'displayUnits': displayUnits, 
-		'conversionFactor': conversionFactor
+		'conversionFactor': conversionFactor,
+		'seriesType': seriesType,
 	};
 	return result;
 }
 function GetValues(observation) {
 	//For WaterML 2, this currently only supports the Time-Value pair method of encoding
-	var query;
-	var points;
+	var query, points, xText, yText, x, y, yRound;
 	var result = [];
 
-	if (WaterMLVersion == 1){
-		query = includeNamespace ? "ns1\\:value" : "value";
+	if (wmlviewer.WaterMLVersion == 1){
+		query = wmlviewer.includeNamespace ? "ns1\\:value" : "value";
 		points = $(observation).find(query);			
 	}
 	else {
-		query = includeNamespace ? "wml2\\:point" : "point";
+		query = wmlviewer.includeNamespace ? "wml2\\:point" : "point";
 		points = $(observation).find(query);
 	}
 
 	for(var j=0;j<points.length;j++)
 	{
-		if (WaterMLVersion == 1){
+		if (wmlviewer.WaterMLVersion == 1){
 			xText = $(points[j]).attr("dateTime");				
 			yText = $(points[j]).text();
 		}
 		else {
-			query = includeNamespace ? "wml2\\:time" : "time";				
+			query = wmlviewer.includeNamespace ? "wml2\\:time" : "time";				
 			xText=$($(points[j]).find(query)[0]).text();
-			query = includeNamespace ? "wml2\\:value" : "value";				
+			query = wmlviewer.includeNamespace ? "wml2\\:value" : "value";				
 			yText = $($(points[j]).find(query)[0]).text();
 		}
 		if (xText) {
 			x = parseISO8601Date(xText);
 			y = parseFloat(yText);
-			yRound = isNaN(y) ? null : roundToSignificantFigures(y, sigFigs);
+			yRound = isNaN(y) ? null : roundToSignificantFigures(y, wmlviewer.sigFigs);
 			result.push([x, yRound]);
 		}
 	}
@@ -395,11 +384,12 @@ function GetValues(observation) {
 function ConvertPointUnits(series, dimensions, fromUnit, toUnit){
 	//dimensions represents the standard dimensional abbreviation (L for length, M for mass, etc.)
 	//fromUnit and toUnit can be any synonym listed in the relevant dimensions in wml-property-library.js 
+	var result;
 	var conversionFactor = ConvertUnits(dimensions, fromUnit, toUnit);
 	result = series;
 	if (conversionFactor>0){
 		for (var i=0; i<result.length;i++){
-			result[i][1] = isNaN(result[i][1]) ? null : roundToSignificantFigures(result[i][1] * conversionFactor, sigFigs);
+			result[i][1] = isNaN(result[i][1]) ? null : roundToSignificantFigures(result[i][1] * conversionFactor, wmlviewer.sigFigs);
 		}
 	}
 	return result;
@@ -413,6 +403,7 @@ function FindSeriesGaps(series, observation) {
 }
 
 function loadXMLDoc(dname){
+	var xhttp, request;
 	if (window.XMLHttpRequest) 
 	  {
 	  xhttp=new XMLHttpRequest();
@@ -428,7 +419,7 @@ function loadXMLDoc(dname){
 	} catch(err) {
 		console.log("XMLHttpRequest failed. Attempting proxy.");
 		try {
-			request = proxy + "?" + dname;
+			request = wmlviewer.proxy + "?" + dname;
 			console.log(request);
 			xhttp.open("GET",request,false);
 			xhttp.send();
@@ -465,11 +456,11 @@ function getNextColor(){
 	];
 	
 	var nextColor;
-	if (curChart.highchartOptions.series.length){
-		if(curChart.highchartOptions.series.length<colors.length-1){
-			nextColor=colors[curChart.highchartOptions.series.length]
+	if (wmlviewer.curChart.highchartOptions.series.length){
+		if(wmlviewer.curChart.highchartOptions.series.length<colors.length-1){
+			nextColor=colors[wmlviewer.curChart.highchartOptions.series.length]
 		}else{
-			nextColor=colors[(curChart.highchartOptions.series.length%colors.length)];
+			nextColor=colors[(wmlviewer.curChart.highchartOptions.series.length%colors.length)];
 		}
 	} else {
 		nextColor = colors[0];	
@@ -481,20 +472,20 @@ function GetWMLVersion(xml){
 	var version;
 	if (xml.find('om\\:OM_Observation').length>0) {
 		version = 2;
-		includeNamespace = true;
+		wmlviewer.includeNamespace = true;
 	} else if (xml.find('OM_Observation').length>0) {
 		version = 2;
-		includeNamespace = false;		
+		wmlviewer.includeNamespace = false;		
 	} else if (xml.find('ns1\\:timeSeriesResponse').length>0){
 		version = 1;
-		includeNamespace = true;		
+		wmlviewer.includeNamespace = true;		
 	} else if (xml.find('timeSeriesResponse').length>0){
 		version = 1;
-		includeNamespace = false;			
+		wmlviewer.includeNamespace = false;			
 	} else {
 		version = 0;
 	}
-	WaterMLVersion = version;
+	wmlviewer.WaterMLVersion = version;
 }
 
 function parseISO8601Date(s){
@@ -577,19 +568,20 @@ function parseISO8601Date(s){
 };
 
 function FindAxis(label) {
-	for (var i = 0; i < curChart.highchartOptions.yAxis.length; i++) {
-		if (curChart.highchartOptions.yAxis[i].title.text == label) {
+	var oppositeSide;
+	for (var i = 0; i < wmlviewer.curChart.highchartOptions.yAxis.length; i++) {
+		if (wmlviewer.curChart.highchartOptions.yAxis[i].title.text == label) {
 			return i;
 		}
 	}
 	//Axis not found. Create new axis	
-	if (curChart.highchartOptions.yAxis.length % 2 == 1) {
-		var oppositeSide = true;
+	if (wmlviewer.curChart.highchartOptions.yAxis.length % 2 == 1) {
+		oppositeSide = true;
 	} else {
-		var oppositeSide = false;
+		oppositeSide = false;
 	}
 
-	curChart.highchartOptions.yAxis.push({
+	wmlviewer.curChart.highchartOptions.yAxis.push({
 		title: {
 			text: label
 		},
@@ -605,15 +597,15 @@ function FindAxis(label) {
 			}
 		}
 	})
-	return curChart.highchartOptions.yAxis.length - 1;
+	return wmlviewer.curChart.highchartOptions.yAxis.length - 1;
 	
 }
 
 function ConvertUnits(dimensions, unitFrom, unitTo){
 	//Returns a conversion factor between two units, searching all synonyms in the attached wml-property-library.js
 	//dimensions represents the standard dimensional abbreviation (L for length, M for mass, etc.)
-	fromConversion = -1;
-	toConversion = -1;
+	var fromConversion = -1;
+	var toConversion = -1;
 	for(var i=0;i<unitsList.dimensions.length;i++){
 		if (unitsList.dimensions[i].name.toLowerCase() == dimensions.toLowerCase()){
 			for (var j=0;j<unitsList.dimensions[i].units.length;j++){
@@ -636,6 +628,8 @@ function ConvertUnits(dimensions, unitFrom, unitTo){
 };
 
 function roundToSignificantFigures(num, n) {
+	var d, power, magnitude, shifted;
+	
     if(num == 0) {
         return 0;
     }

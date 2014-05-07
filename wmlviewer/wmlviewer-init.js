@@ -1,46 +1,47 @@
+"use strict"
 //Get URL parameters
-var urlObj = GetUrlObject();
+wmlviewer.urlObj = GetUrlObject();
 
 
 //******UPDATE DEFAULT CONFIG VALUES BASED ON URL PARAMETERS***********
-if ('xmin' in urlObj.parameters) {initialExtent.xmin = urlObj.parameters.xmin;}
-if ('ymin' in urlObj.parameters) {initialExtent.ymin = urlObj.parameters.ymin;}
-if ('xmax' in urlObj.parameters) {initialExtent.xmax = urlObj.parameters.xmax;}		
-if ('ymax' in urlObj.parameters) {initialExtent.ymax = urlObj.parameters.ymax;}
-if ('chartTitle' in urlObj.parameters) {chartTitle = urlObj.parameters.chartTitle;}
-if ('featureService' in urlObj.parameters) {featureService = urlObj.parameters.featureService;}
+if ('xmin' in wmlviewer.urlObj.parameters) {wmlviewer.initialExtent.xmin = wmlviewer.urlObj.parameters.xmin;}
+if ('ymin' in wmlviewer.urlObj.parameters) {wmlviewer.initialExtent.ymin = wmlviewer.urlObj.parameters.ymin;}
+if ('xmax' in wmlviewer.urlObj.parameters) {wmlviewer.initialExtent.xmax = wmlviewer.urlObj.parameters.xmax;}		
+if ('ymax' in wmlviewer.urlObj.parameters) {wmlviewer.initialExtent.ymax = wmlviewer.urlObj.parameters.ymax;}
+if ('chartTitle' in wmlviewer.urlObj.parameters) {wmlviewer.chartTitle = wmlviewer.urlObj.parameters.chartTitle;}
+if ('featureService' in wmlviewer.urlObj.parameters) {wmlviewer.featureService = wmlviewer.urlObj.parameters.featureService;}
 
 //Initialize Map
-var mainMap = new WMLMap();
-mainMap.chartVariableName = "mainChart"; //This links the map to the chart and should match the chart variable defined below
-mainMap.mapDiv = mapDiv;
-mainMap.init(initialExtent);
+wmlviewer.mainMap = new WMLMap();
+wmlviewer.mainMap.chartVariableName = "mainChart"; //This links the map to the chart and should match the chart variable defined below
+wmlviewer.mainMap.mapDiv = wmlviewer.mapDiv;
+wmlviewer.mainMap.init();
 AddServices();
 
 //Initialize Chart
-var mainChart = new WMLChart();
-mainChart.title = chartTitle;
-mainChart.chartDiv = chartDiv;
-mainChart.tableDiv = tableDiv;
-mainChart.init();	
+wmlviewer.mainChart = new WMLChart();
+wmlviewer.mainChart.title = wmlviewer.chartTitle;
+wmlviewer.mainChart.chartDiv = wmlviewer.chartDiv;
+wmlviewer.mainChart.tableDiv = wmlviewer.tableDiv;
+wmlviewer.mainChart.init();	
 
 //Add Feature Services to Map
 //This delays itself until the map has been created and loaded.
 function AddServices(){
-	if(mainMap.map){
-		if (mainMap.map.loaded)
+	if(wmlviewer.mainMap.map){
+		if (wmlviewer.mainMap.map.loaded)
 		{
-			if (isArray(featureService)){
-				for (var i = 0; i < featureService.length; i++){
+			if (isArray(wmlviewer.featureService)){
+				for (var i = 0; i < wmlviewer.featureService.length; i++){
 					try {
-						mainMap.AddFeatureService(featureService[i]);
+						wmlviewer.mainMap.AddFeatureService(wmlviewer.featureService[i]);
 					} catch(err) {
 						console.log("Invalid feature service provided in URL")
 					}			
 				}
 			} else {
 				try {
-					mainMap.AddFeatureService(featureService);
+					wmlviewer.mainMap.AddFeatureService(wmlviewer.featureService);
 				} catch(err) {
 					console.log("Invalid feature service provided in URL")
 				}
