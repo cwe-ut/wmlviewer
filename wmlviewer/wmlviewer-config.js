@@ -9,7 +9,7 @@ var wmlviewer = {
 	//Path to proxy service to enable access to servers which do not allow Cross Domain Requests
 	proxy:"esri-proxy/proxy.php",
 	//Default Feature Service
-	featureService:"http://crwr-arcgis10.austin.utexas.edu/ArcGIS/rest/services/WorldWaterOnline/WatershedExplorer_Discharge/MapServer",
+	featureService:"http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_Streamflow/MapServer",
 	//Default chart title
 	chartTitle:"WaterML Viewer",
 	//ID of the HTML Div elements each object should render to
