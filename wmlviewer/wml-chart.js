@@ -125,10 +125,14 @@ function AddWaterML(xmlLink, linkSettings) {
 			propertyDefaults = GetPropertyDefaults(observedProperty, sourceUnits, observations[i]);
 			//Get series values
 			seriesValues = GetValues(observations[i]);
-			//Convert series units
-			seriesValuesConverted = ConvertPointUnits(seriesValues,propertyDefaults.dimensions, propertyDefaults.sourceUnits, propertyDefaults.displayUnits);
-			//Add series to chart and table
-			AddSeries(seriesValuesConverted,seriesName,propertyDefaults, xmlLinkAdj);
+			if (seriesValues.length > 0){
+				//Convert series units
+				seriesValuesConverted = ConvertPointUnits(seriesValues,propertyDefaults.dimensions, propertyDefaults.sourceUnits, propertyDefaults.displayUnits);
+				//Add series to chart and table
+				AddSeries(seriesValuesConverted,seriesName,propertyDefaults, xmlLinkAdj);
+			} else {
+				alert("Series has no values.");
+			}
 		}
 	}
 }
