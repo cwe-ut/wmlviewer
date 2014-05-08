@@ -48,7 +48,7 @@ var propertyList = {
 			dimensions: "M/L^2",
 			displayUnits: "kg/m^2",
 			seriesType: "area",			
-			synonyms: ["Soil Moisture", "0-100 cm layer 1 Soil moisture content"],
+			synonyms: ["Soil Moisture", "0-100 cm layer 1 Soil moisture content", "0-100 cm  Average layer 1 soil moisture"],
 		},
 		{
 			name: "Storage",
