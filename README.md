@@ -1,5 +1,24 @@
 WMLViewer
 =========
+
+Demo
+----
+A demo of the current master branch can be viewed at: http://webapps.hydroinformatix.com/wmlviewer/github/wmlviewer.html
+
+A sample list of map services which can be used to test WMLViewer. To view these, add "?featureService=" + Service URL to the WMLViewer URL. (e.g. http://webapps.hydroinformatix.com/wmlviewer/github/wmlviewer.html?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_SoilMoisture_GLDAS/MapServer )
+
+Streamflow: ?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_Streamflow/MapServer
+
+Precipitation: ?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_Precipitation_NLDAS/MapServer
+
+Evaporation: ?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_Evaporation_NLDAS/MapServer
+
+Soil Moisture: ?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_SoilMoisture_GLDAS/MapServer
+
+Reservoir Storage: ?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_ReservoirStorage/MapServer
+
+Water Level: ?featureService=http://crwr-arcgis-p01.austin.utexas.edu/arcgis/rest/services/WorldWaterOnline/WWO_WaterLevel/MapServer
+
 About WMLViewer
 ---------------
 WMLViewer is a set of web tools for viewing WaterML services as maps, graphs, and tables. The primary focus is to combine interactive maps with interactive charts in a web browser setting, allowing a user to explore and download data in an easy-to-use fashion.
@@ -33,10 +52,6 @@ The following are a few of the high priority improvements suggested for this lib
 7. Identify additional desired features
 8. Create compressed version of Javascript code for better performance
 9. Create API documentation
-
-Demo
-----
-A demo of the current master branch can be viewed at: http://webapps.hydroinformatix.com/wmlviewer/github/wmlviewer.html
 
 License
 -------
